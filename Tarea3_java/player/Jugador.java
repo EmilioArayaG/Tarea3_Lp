@@ -1,9 +1,10 @@
 package player;
 
-import objetos.ItemTipo;
 import java.util.EnumMap;
+import objetos.AccesoProfundidad;
+import objetos.ItemTipo;
 
-public class Jugador {
+public class Jugador implements AccesoProfundidad {
     private final Oxigeno oxigeno = new Oxigeno();
     private final EnumMap<ItemTipo,Integer> inventario = new EnumMap<>(ItemTipo.class);
 
@@ -72,4 +73,11 @@ public class Jugador {
         }
         System.out.println("------------------------");
     }
+
+    @Override
+    public boolean puedeAcceder(int requerido) {
+        return true;
+    }
 }
+
+

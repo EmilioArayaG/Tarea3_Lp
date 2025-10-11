@@ -41,7 +41,13 @@ public abstract class Zona {
         return (int)Math.ceil(((3 + 3*dd) * dz) / 50.0);
     }
 
+    protected int produccion(int z, int nmin, int nmax){
+        int val = (int)Math.floor(nmin + (nmax - nmin) * d(z));
+        return Math.max(1, val);
+    }
+
     public abstract void entrar(Jugador jugador);
     public abstract void explorar(Jugador jugador);
     public abstract void recolectaTipoRecurso(Jugador jugador, objetos.ItemTipo tipo);
 }
+
