@@ -38,6 +38,8 @@ public class Jugador implements AccesoProfundidad {
         return new EnumMap<>(inventario);
     }
 
+    public void vaciarInventario(){ inventario.clear(); }
+
     public boolean tienePlanos(){ return tienePlanos; }
     public void setTienePlanos(boolean v){ tienePlanos = v; }
 
@@ -79,5 +81,6 @@ public class Jugador implements AccesoProfundidad {
         return true;
     }
 }
+
 
 

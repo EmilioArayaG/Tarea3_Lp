@@ -1,8 +1,14 @@
 package objetos;
 
+import entorno.Zona;
+import java.util.HashMap;
+import java.util.Map;
+
 public class NaveExploradora extends Vehiculo {
     private int limiteProf = 500;
     private boolean moduloActivo = false;
+
+    private final Map<Class<? extends Zona>, Integer> anclajes = new HashMap<>();
 
     public static class ModuloProfundidad { }
 
@@ -17,9 +23,16 @@ public class NaveExploradora extends Vehiculo {
     }
 
     public boolean moduloActivo(){ return moduloActivo; }
+    public int limiteProfundidad(){ return limiteProf; }
 
-    public void anclarNave(int profAnclaje){
-        // TODO: almacenar pnave por zona (lo centralizaremos en entorno.Zonas)
+    public void setAnclaje(Zona zona, int prof){
+        anclajes.put(zona.getClass(), prof);
+    }
+
+    public int getAnclaje(Zona zona){
+        return anclajes.getOrDefault(zona.getClass(), zona.zMin());
     }
 }
+
+
 

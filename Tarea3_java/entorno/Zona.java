@@ -11,6 +11,9 @@ public abstract class Zona {
         this.zMax = zMax;
     }
 
+    public int zMin(){ return zMin; }
+    public int zMax(){ return zMax; }
+
     protected double d(int z){
         int span = Math.max(1, zMax - zMin);
         double dd = (z - zMin) / (double) span;
@@ -50,4 +53,6 @@ public abstract class Zona {
     public abstract void explorar(Jugador jugador);
     public abstract void recolectaTipoRecurso(Jugador jugador, objetos.ItemTipo tipo);
 }
+
+
 
