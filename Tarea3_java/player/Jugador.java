@@ -17,12 +17,12 @@ public class Jugador implements AccesoProfundidad {
     public Oxigeno getOxigeno(){ return oxigeno; }
 
     public void agregar(ItemTipo t, int c){
-        if (c <= 0) throw new IllegalArgumentException("cantidad <= 0");
+        if (c <= 0) return;
         inventario.merge(t, c, Integer::sum);
     }
 
     public boolean quitar(ItemTipo t, int c){
-        if (c <= 0) throw new IllegalArgumentException("cantidad <= 0");
+        if (c <= 0) return false;
         int cur = inventario.getOrDefault(t, 0);
         if (cur < c) return false;
         if (cur == c) inventario.remove(t);
@@ -56,7 +56,7 @@ public class Jugador implements AccesoProfundidad {
 
     public int getProfundidad(){ return profundidad; }
     public void setProfundidad(int p){
-        if (p < 0) throw new IllegalArgumentException("profundidad negativa");
+        if (p < 0) p = 0;
         this.profundidad = p;
     }
 
@@ -68,7 +68,7 @@ public class Jugador implements AccesoProfundidad {
                 + ", traje=" + (trajeTermico ? "OK" : "NO")
                 + ", planos=" + (tienePlanos ? "OK" : "NO"));
         if (inventario.isEmpty()){
-            System.out.println("Inventario: (vacío)");
+            System.out.println("Inventario: (vacio)");
         } else {
             System.out.println("Inventario:");
             inventario.forEach((t,c) -> System.out.println(" - " + t + ": " + c));
@@ -81,6 +81,7 @@ public class Jugador implements AccesoProfundidad {
         return true;
     }
 }
+
 
 
 

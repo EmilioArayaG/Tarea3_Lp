@@ -1,6 +1,7 @@
 package objetos;
 
 import entorno.Zona;
+import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -9,6 +10,7 @@ public class NaveExploradora extends Vehiculo {
     private boolean moduloActivo = false;
 
     private final Map<Class<? extends Zona>, Integer> anclajes = new HashMap<>();
+    private final EnumMap<ItemTipo,Integer> almacen = new EnumMap<>(ItemTipo.class);
 
     public static class ModuloProfundidad { }
 
@@ -32,7 +34,29 @@ public class NaveExploradora extends Vehiculo {
     public int getAnclaje(Zona zona){
         return anclajes.getOrDefault(zona.getClass(), zona.zMin());
     }
+
+    public EnumMap<ItemTipo,Integer> verAlmacen(){
+        return new EnumMap<>(almacen);
+    }
+
+    public int cantidad(ItemTipo t){
+        return almacen.getOrDefault(t, 0);
+    }
+
+    public void depositar(ItemTipo t, int c){
+        if (c <= 0) return;
+        almacen.merge(t, c, Integer::sum);
+    }
+
+    public void depositarTodoDesdeJugador(player.Jugador j){
+        var inv = j.verInventario();
+        for (var e : inv.entrySet()){
+            depositar(e.getKey(), e.getValue());
+        }
+        j.vaciarInventario();
+    }
 }
+
 
 
 

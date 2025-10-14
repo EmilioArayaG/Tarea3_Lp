@@ -17,35 +17,36 @@ public class ZonaProfunda extends Zona {
     }
 
     @Override
-    public void entrar(Jugador j){}
+    public void entrar(Jugador jugador){}
 
     @Override
     public void explorar(Jugador j){
         int z = j.getProfundidad();
         int costo = costoExplorar(j, z);
         j.getOxigeno().consumirO2(costo);
-        System.out.println("[Profunda] Exploras a " + z + " m. O2 -" + costo + (j.tieneMejoraTanque() ? " (sin presión)" : " (con presión)"));
+        System.out.println("[Profunda] Exploras a " + z + " m. O2 -" + costo);
 
-        ItemTipo[] recursos = { ItemTipo.PLATA, ItemTipo.ORO, ItemTipo.ACERO, ItemTipo.DIAMANTE, ItemTipo.MAGNETITA };
-        ItemTipo drop = recursos[RNG.nextInt(recursos.length)];
-        int cantidad = produccion(z, 1, 3);
-        j.agregar(drop, cantidad);
-        System.out.println("Obtienes: " + drop + " x" + cantidad);
+        ItemTipo[] pool = { ItemTipo.PLATA, ItemTipo.ORO, ItemTipo.ACERO, ItemTipo.DIAMANTE, ItemTipo.MAGNETITA };
+        ItemTipo drop = pool[RNG.nextInt(pool.length)];
+        int cant = produccion(z, 1, 3);
+        j.agregar(drop, cant);
+        System.out.println("[Profunda] Obtienes " + drop + " x" + cant);
     }
 
     @Override
     public void recolectaTipoRecurso(Jugador j, ItemTipo tipo){
+        int z = j.getProfundidad();
         switch (tipo){
             case PLATA, ORO, ACERO, DIAMANTE, MAGNETITA -> {
-                int z = j.getProfundidad();
                 int costo = costoRecolectar(j, z);
                 j.getOxigeno().consumirO2(costo);
-                int cantidad = produccion(z, 1, 3);
-                j.agregar(tipo, cantidad);
-                System.out.println("[Profunda] Recolectaste " + tipo + " x" + cantidad + " (O2 -" + costo + (j.tieneMejoraTanque() ? ", sin presión)" : ", con presión)"));
+                int cant = produccion(z, 1, 3);
+                j.agregar(tipo, cant);
+                System.out.println("[Profunda] Recolectaste " + tipo + " x" + cant + " (O2 -" + costo + ")");
             }
-            default -> System.out.println("[Profunda] Ese recurso no está disponible aquí: " + tipo);
+            default -> System.out.println("[Profunda] Recurso no disponible aqui: " + tipo);
         }
     }
 }
+
 

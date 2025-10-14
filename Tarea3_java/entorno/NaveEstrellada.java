@@ -17,40 +17,46 @@ public class NaveEstrellada extends Zona {
     }
 
     @Override
-    public void entrar(Jugador j){
-        // sin costo de O2
-    }
+    public void entrar(Jugador j){}
 
     @Override
     public void explorar(Jugador j){
         boolean tieneTraje = j.tieneTrajeTermico();
 
         if (!tieneTraje && accionUsadaSinTraje) {
-            System.out.println("[Nave Estrellada] Sin traje térmico solo puedes realizar una acción por visita.");
+            System.out.println("[Nave Estrellada] Sin traje termico solo puedes realizar una accion por visita.");
             return;
         }
 
         if (!moduloEntregado && RNG.nextDouble() < 0.25){
             moduloEntregado = true;
             j.agregar(ItemTipo.MODULO_PROFUNDIDAD, 1);
-            System.out.println("[Nave Estrellada] Hallaste MODULO_PROFUNDIDAD (único).");
+            System.out.println("[Nave Estrellada] Hallaste MODULO_PROFUNDIDAD (unico).");
             if (!tieneTraje) accionUsadaSinTraje = true;
             return;
         }
 
-        if (tieneTraje) {
-            ItemTipo drop = (RNG.nextBoolean()) ? ItemTipo.CABLES : ItemTipo.PIEZAS_METAL;
-            j.agregar(drop, 1 + RNG.nextInt(2));
-            System.out.println("[Nave Estrellada] Encontraste " + drop + ".");
-        } else {
-            System.out.println("[Nave Estrellada] Sin traje, recorres un pasillo pero no encuentras nada útil.");
-            accionUsadaSinTraje = true;
-        }
+        ItemTipo drop = (RNG.nextBoolean()) ? ItemTipo.CABLES : ItemTipo.PIEZAS_METAL;
+        j.agregar(drop, 1 + RNG.nextInt(2));
+        System.out.println("[Nave Estrellada] Encontraste " + drop + ".");
+        if (!tieneTraje) accionUsadaSinTraje = true;
     }
 
     @Override
-    public void recolectaTipoRecurso(Jugador jugador, ItemTipo tipo) {
-        explorar(jugador);
+    public void recolectaTipoRecurso(Jugador j, ItemTipo tipo) {
+        boolean tieneTraje = j.tieneTrajeTermico();
+        if (!tieneTraje && accionUsadaSinTraje) {
+            System.out.println("[Nave Estrellada] Sin traje termico solo puedes realizar una accion por visita.");
+            return;
+        }
+        if (tipo == ItemTipo.CABLES || tipo == ItemTipo.PIEZAS_METAL) {
+            j.agregar(tipo, 1 + RNG.nextInt(2));
+            System.out.println("[Nave Estrellada] Recolectas " + tipo + ".");
+            if (!tieneTraje) accionUsadaSinTraje = true;
+        } else {
+            System.out.println("[Nave Estrellada] Aqui solo puedes obtener CABLES o PIEZAS_METAL.");
+        }
     }
 }
+
 

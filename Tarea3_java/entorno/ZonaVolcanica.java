@@ -11,30 +11,31 @@ public class ZonaVolcanica extends Zona {
     public ZonaVolcanica(){ super(1000, 1500); }
 
     @Override
-    public void entrar(Jugador j){
-        // acceso se valida al salir de la nave (Main)
-    }
+    public void entrar(Jugador j){}
 
     @Override
     public void explorar(Jugador j){
         int z = j.getProfundidad();
+        int costo = costoExplorar(j, z);
+        j.getOxigeno().consumirO2(costo);
+        System.out.println("[Volcanica] Exploras a " + z + " m. O2 -" + costo);
 
         if (!planoEntregado && RNG.nextDouble() < 0.15){
             planoEntregado = true;
             j.agregar(ItemTipo.PLANO_NAVE, 1);
             j.setTienePlanos(true);
-            System.out.println("[Volcánica] Hallaste PLANO_NAVE (único).");
+            System.out.println("[Volcanica] Hallaste PLANO_NAVE (unico).");
         } else {
             ItemTipo[] rec = { ItemTipo.TITANIO, ItemTipo.SULFURO, ItemTipo.URANIO };
             ItemTipo drop = rec[RNG.nextInt(rec.length)];
             int cant = produccion(z, 1, 3);
             j.agregar(drop, cant);
-            System.out.println("[Volcánica] Obtienes " + drop + " x" + cant);
+            System.out.println("[Volcanica] Obtienes " + drop + " x" + cant);
         }
 
         if (RNG.nextDouble() < 0.20){
             j.vaciarInventario();
-            System.out.println("[Volcánica] ¡Te desmayaste por el calor/presión! Pierdes el inventario.");
+            System.out.println("[Volcanica] Te desmayaste. Pierdes el inventario.");
         }
     }
 
@@ -43,16 +44,19 @@ public class ZonaVolcanica extends Zona {
         int z = j.getProfundidad();
         switch (tipo){
             case TITANIO, SULFURO, URANIO -> {
+                int costo = costoRecolectar(j, z);
+                j.getOxigeno().consumirO2(costo);
                 int cant = produccion(z, 1, 3);
                 j.agregar(tipo, cant);
-                System.out.println("[Volcánica] Recolectaste " + tipo + " x" + cant);
+                System.out.println("[Volcanica] Recolectaste " + tipo + " x" + cant + " (O2 -" + costo + ")");
                 if (RNG.nextDouble() < 0.20){
                     j.vaciarInventario();
-                    System.out.println("[Volcánica] ¡Te desmayaste! Pierdes el inventario.");
+                    System.out.println("[Volcanica] Te desmayaste. Pierdes el inventario.");
                 }
             }
-            default -> System.out.println("[Volcánica] Recurso no disponible aquí: " + tipo);
+            default -> System.out.println("[Volcanica] Recurso no disponible aqui: " + tipo);
         }
     }
 }
+
 

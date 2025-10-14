@@ -22,9 +22,7 @@ public abstract class Zona {
         return dd;
     }
 
-    protected int presion(Jugador j, int z){
-        return 0;
-    }
+    protected int presion(Jugador j, int z){ return 0; }
 
     protected int costoExplorar(Jugador j, int z){
         double dd = d(z);
@@ -49,10 +47,15 @@ public abstract class Zona {
         return Math.max(1, val);
     }
 
+    public int nProduccion(int z, int nmin, int nmax){
+        return produccion(z, nmin, nmax);
+    }
+
     public abstract void entrar(Jugador jugador);
     public abstract void explorar(Jugador jugador);
     public abstract void recolectaTipoRecurso(Jugador jugador, objetos.ItemTipo tipo);
 }
+
 
 
 
