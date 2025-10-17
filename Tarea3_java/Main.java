@@ -240,12 +240,34 @@ public class Main {
                             var al = nave.verAlmacen();
                             if (al.isEmpty()) System.out.println(" (vacio)");
                             else al.forEach((t,c)-> System.out.println(" - " + t + ": " + c));
+
                             System.out.println("Depositar TODO el inventario del jugador en la nave? (s/n)");
                             if (sc.nextLine().trim().equalsIgnoreCase("s")){
                                 nave.depositarTodoDesdeJugador(jugador);
                                 System.out.println("Deposito completado.");
                             }
+
+                            System.out.println("Retirar desde la nave? (s/n)");
+                            if (sc.nextLine().trim().equalsIgnoreCase("s")){
+                                System.out.print("Tipo (igual al enum, ej: COBRE): ");
+                                String ts = sc.nextLine().trim().toUpperCase();
+                                System.out.print("Cantidad: ");
+                                String cs = sc.nextLine().trim();
+                                try {
+                                    ItemTipo t = ItemTipo.valueOf(ts);
+                                    int cant = Integer.parseInt(cs);
+                                    if (cant <= 0){ System.out.println("cantidad invalida."); }
+                                    else if (nave.transferirAJugador(jugador, t, cant)){
+                                        System.out.println("Retiro completado.");
+                                    } else {
+                                        System.out.println("No hay stock suficiente en la nave.");
+                                    }
+                                } catch (Exception e){
+                                    System.out.println("Entrada invalida.");
+                                }
+                            }
                         }
+
 
                         case "9" -> {
                             if (!robotConstruido || robot == null){

@@ -89,6 +89,37 @@ public class NaveExploradora extends Vehiculo {
     }
 
     /**
+     * retira del almacen si hay stock suficiente
+     * @param t tipo
+     * @param c cantidad
+     * @return true si retiro ok
+     */
+    public boolean retirar(ItemTipo t, int c){
+        if (c <= 0) return false;
+        int cur = almacen.getOrDefault(t, 0);
+        if (cur < c) return false;
+        int rest = cur - c;
+        if (rest == 0) almacen.remove(t);
+        else almacen.put(t, rest);
+        return true;
+    }
+
+    /**
+     * transfiere desde la nave al jugador si hay stock
+     * @param j jugador
+     * @param t tipo
+     * @param c cantidad
+     * @return true si ok
+     */
+    public boolean transferirAJugador(player.Jugador j, ItemTipo t, int c){
+        if (retirar(t, c)){
+            j.agregar(t, c);
+            return true;
+        }
+        return false;
+    }
+
+    /**
      * vacia inventario del jugador en el almacen
      * @param j jugador
      */
