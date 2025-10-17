@@ -8,16 +8,25 @@ public class ZonaVolcanica extends Zona {
     private static final Random RNG = new Random();
     private static boolean planoEntregado = false;
 
-    /** crea volcanica [1000..1500] */
+    /*
+     * crea la zona volcanica, con un rango de profundidad entre 1000 y 1500 metros.
+     * @param ninguno
+     * @return
+     */
     public ZonaVolcanica(){ super(1000, 1500); }
 
-    /** no-op al entrar */
+    /*
+     * define la accion que ocurre al entrar en la zona (en este caso, ninguna).
+     * @param j: jugador - el jugador que entra a la zona.
+     * @return void
+     */
     @Override
     public void entrar(Jugador j){}
 
-    /**
-     * 15% plano_nave (unico) y si no, titanio/sulfuro/uranio con n(d) 3..8; 20% desmayo
-     * @param j jugador
+    /*
+     * ejecuta la accion de explorar, con probabilidad de encontrar los planos de la nave o sufrir un desmayo.
+     * @param j: jugador - el jugador que realiza la exploracion.
+     * @return void
      */
     @Override
     public void explorar(Jugador j){
@@ -45,10 +54,11 @@ public class ZonaVolcanica extends Zona {
         }
     }
 
-    /**
-     * recolecta titanio/sulfuro/uranio con n(d) 3..8 y 20% desmayo
-     * @param j jugador
-     * @param tipo tipo de recurso
+    /*
+     * permite al jugador recolectar recursos exoticos como titanio, sulfuro o uranio.
+     * @param j: jugador - el jugador que recolecta.
+     * @param tipo: itemtipo - el recurso que se intenta recolectar.
+     * @return void
      */
     @Override
     public void recolectaTipoRecurso(Jugador j, ItemTipo tipo){
@@ -69,6 +79,7 @@ public class ZonaVolcanica extends Zona {
         }
     }
 }
+
 
 
 

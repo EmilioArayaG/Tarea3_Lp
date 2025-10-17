@@ -14,72 +14,93 @@ public class NaveExploradora extends Vehiculo {
 
     public static class ModuloProfundidad { }
 
-    /**
-     * valida acceso con limite 500/1500
-     * @param requerido profundidad requerida
-     * @return true si no supera el limite
+    /*
+     * verifica si la nave puede operar a la profundidad requerida, segun su limite actual.
+     * @param requerido: int - la profundidad a verificar.
+     * @return boolean: 'true' si la profundidad esta dentro del limite de la nave.
      */
     @Override
     public boolean puedeAcceder(int requerido){
         return requerido <= limiteProf;
     }
 
-    /**
-     * instala modulo y eleva el limite a 1500
+    /*
+     * instala el modulo de profundidad, aumentando el limite de la nave a 1500 metros.
+     * @param ninguno
+     * @return void
      */
     public void instalarModuloProfundidad(){
         moduloActivo = true;
         limiteProf = 1500;
     }
 
-    /** @return true si el modulo esta activo */
+    /*
+     * comprueba si el modulo de profundidad ya ha sido instalado en la nave.
+     * @param ninguno
+     * @return boolean: 'true' si el modulo esta activo.
+     */
     public boolean moduloActivo(){ return moduloActivo; }
 
-    /** @return limite de profundidad actual */
+    /*
+     * devuelve el limite de profundidad maximo que la nave puede alcanzar.
+     * @param ninguno
+     * @return int: el limite de profundidad en metros.
+     */
     public int limiteProfundidad(){ return limiteProf; }
 
-    /**
-     * define el anclaje por zona
-     * @param zona zona destino
-     * @param prof profundidad de anclaje
+    /*
+     * fija la profundidad de anclaje de la nave para una zona especifica.
+     * @param zona: zona - la zona en la cual se fijara el anclaje.
+     * @param prof: int - la profundidad de anclaje en metros.
+     * @return void
      */
     public void setAnclaje(Zona zona, int prof){
         if (zona == null) return;
         anclajes.put(zona.getClass(), prof);
     }
 
-    /**
-     * atajo legible para ajustar anclaje
-     * @param zona zona destino
-     * @param prof profundidad
+    /*
+     * alias del metodo setanclaje para un uso mas intuitivo.
+     * @param zona: zona - la zona en la cual se fijara el anclaje.
+     * @param prof: int - la profundidad de anclaje en metros.
+     * @return void
      */
     public void anclarNave(Zona zona, int prof){
         setAnclaje(zona, prof);
     }
 
-    /**
-     * obtiene anclaje para una zona (zmin por defecto)
-     * @param zona zona consultada
-     * @return profundidad de anclaje
+    /*
+     * obtiene la profundidad de anclaje guardada para una zona. si no hay, usa la zmin de la zona.
+     * @param zona: zona - la zona de la que se quiere saber el anclaje.
+     * @return int: la profundidad de anclaje en metros.
      */
     public int getAnclaje(Zona zona){
         return anclajes.getOrDefault(zona.getClass(), zona.zMin());
     }
 
-    /** @return copia del almacen de la nave */
+    /*
+     * devuelve una copia del mapa de items almacenados en la nave.
+     * @param ninguno
+     * @return enummap<itemtipo,integer>: un mapa con los items y sus cantidades.
+     */
     public EnumMap<ItemTipo,Integer> verAlmacen(){
         return new EnumMap<>(almacen);
     }
 
-    /** @return cantidad en almacen para un tipo */
+    /*
+     * consulta la cantidad de un tipo de item especifico en el almacen de la nave.
+     * @param t: itemtipo - el tipo de item a consultar.
+     * @return int: la cantidad de items de ese tipo.
+     */
     public int cantidad(ItemTipo t){
         return almacen.getOrDefault(t, 0);
     }
 
-    /**
-     * deposita al almacen (permite negativos para consumir)
-     * @param t tipo de item
-     * @param c cantidad
+    /*
+     * anade o retira una cantidad de un item del almacen de la nave.
+     * @param t: itemtipo - el tipo de item a modificar.
+     * @param c: int - la cantidad a anadir (si es negativa, se retira).
+     * @return void
      */
     public void depositar(ItemTipo t, int c){
         if (c == 0) return;
@@ -88,11 +109,11 @@ public class NaveExploradora extends Vehiculo {
         else almacen.put(t, cur);
     }
 
-    /**
-     * retira del almacen si hay stock suficiente
-     * @param t tipo
-     * @param c cantidad
-     * @return true si retiro ok
+    /*
+     * retira una cantidad de un item del almacen, solo si hay suficiente stock.
+     * @param t: itemtipo - el tipo de item a retirar.
+     * @param c: int - la cantidad a retirar.
+     * @return boolean: 'true' si la operacion fue exitosa.
      */
     public boolean retirar(ItemTipo t, int c){
         if (c <= 0) return false;
@@ -104,12 +125,12 @@ public class NaveExploradora extends Vehiculo {
         return true;
     }
 
-    /**
-     * transfiere desde la nave al jugador si hay stock
-     * @param j jugador
-     * @param t tipo
-     * @param c cantidad
-     * @return true si ok
+    /*
+     * mueve items desde el almacen de la nave al inventario del jugador.
+     * @param j: player.jugador - el jugador que recibira los items.
+     * @param t: itemtipo - el tipo de item a transferir.
+     * @param c: int - la cantidad a transferir.
+     * @return boolean: 'true' si la transferencia se completo.
      */
     public boolean transferirAJugador(player.Jugador j, ItemTipo t, int c){
         if (retirar(t, c)){
@@ -119,9 +140,10 @@ public class NaveExploradora extends Vehiculo {
         return false;
     }
 
-    /**
-     * vacia inventario del jugador en el almacen
-     * @param j jugador
+    /*
+     * transfiere todos los items del inventario del jugador al almacen de la nave.
+     * @param j: player.jugador - el jugador cuyo inventario se vaciara.
+     * @return void
      */
     public void depositarTodoDesdeJugador(player.Jugador j){
         var inv = j.verInventario();

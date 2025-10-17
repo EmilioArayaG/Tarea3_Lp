@@ -8,16 +8,25 @@ public class ZonaArrecife extends Zona {
     private static final Random RNG = new Random();
     private static int stockPiezaTanque = 3;
 
-    /** crea arrecife [0..199] */
+    /*
+     * crea la zona de arrecife, con un rango de profundidad entre 0 y 199 metros.
+     * @param ninguno
+     * @return
+     */
     public ZonaArrecife(){ super(0, 199); }
 
-    /** no-op al entrar */
+    /*
+     * define la accion que ocurre al entrar en la zona (en este caso, ninguna).
+     * @param jugador: jugador - el jugador que entra a la zona.
+     * @return void
+     */
     @Override
     public void entrar(Jugador jugador){}
 
-    /**
-     * 30% pieza_tanque (stock 3); si no cae, recurso basico con n(d) 1..3
-     * @param j jugador
+    /*
+     * ejecuta la accion de explorar, con probabilidad de encontrar una pieza de tanque o recursos basicos.
+     * @param j: jugador - el jugador que realiza la exploracion.
+     * @return void
      */
     @Override
     public void explorar(Jugador j){
@@ -42,10 +51,11 @@ public class ZonaArrecife extends Zona {
         }
     }
 
-    /**
-     * recolecta cuarzo/silicio/cobre con n(d) 1..3
-     * @param j jugador
-     * @param tipo tipo de recurso
+    /*
+     * permite al jugador recolectar recursos basicos como cuarzo, silicio o cobre.
+     * @param j: jugador - el jugador que recolecta.
+     * @param tipo: itemtipo - el recurso que se intenta recolectar.
+     * @return void
      */
     @Override
     public void recolectaTipoRecurso(Jugador j, ItemTipo tipo){

@@ -9,19 +9,32 @@ public class NaveEstrellada extends Zona {
     private static boolean moduloEntregado = false;
     private boolean accionUsadaSinTraje = false;
 
-    /** crea nave estrellada (z fija 0) */
+    /*
+     * crea la zona de la nave estrellada, con una profundidad fija en 0 metros.
+     * @param ninguno
+     * @return
+     */
     public NaveEstrellada(){ super(0, 0); }
 
-    /** resetea la restriccion de 1 accion sin traje por visita */
+    /*
+     * reinicia el contador de acciones para un jugador sin traje termico al entrar en la zona.
+     * @param ninguno
+     * @return void
+     */
     public void resetAccionVisita(){ accionUsadaSinTraje = false; }
 
-    /** no-op al entrar */
+    /*
+     * define la accion que ocurre al entrar en la zona (en este caso, ninguna).
+     * @param jugador: jugador - el jugador que entra a la zona.
+     * @return void
+     */
     @Override
     public void entrar(Jugador jugador){}
 
-    /**
-     * 25% modulo_profundidad (unico); respeta regla de 1 accion sin traje
-     * @param j jugador
+    /*
+     * ejecuta la accion de explorar dentro de la nave, con probabilidad de encontrar el modulo de profundidad.
+     * @param j: jugador - el jugador que realiza la exploracion.
+     * @return void
      */
     @Override
     public void explorar(Jugador j){
@@ -43,10 +56,11 @@ public class NaveEstrellada extends Zona {
         if (!tieneTraje) accionUsadaSinTraje = true;
     }
 
-    /**
-     * recolecta cables/piezas_metal; respeta regla de 1 accion sin traje
-     * @param j jugador
-     * @param tipo tipo de recurso
+    /*
+     * permite al jugador recolectar cables o piezas metalicas dentro de la nave.
+     * @param j: jugador - el jugador que recolecta.
+     * @param tipo: itemtipo - el recurso que se intenta recolectar.
+     * @return void
      */
     @Override
     public void recolectaTipoRecurso(Jugador j, ItemTipo tipo) {

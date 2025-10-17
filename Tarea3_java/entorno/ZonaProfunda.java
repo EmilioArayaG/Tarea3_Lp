@@ -8,16 +8,32 @@ public class ZonaProfunda extends Zona {
     private int presionBase = 10;
     private static final Random RNG = new Random();
 
-    /** crea profunda [200..999] */
+    /*
+     * crea la zona profunda, con un rango de profundidad entre 200 y 999 metros.
+     * @param ninguno
+     * @return
+     */
     public ZonaProfunda(){ super(200, 999); }
 
-    /** fija presion base (default 10) */
+    /*
+     * establece el valor de la presion base que afecta al jugador en esta zona.
+     * @param p: int - el nuevo valor de la presion base.
+     * @return void
+     */
     public void setPresionBase(int p){ this.presionBase = p; }
-    /** @return presion base */
+
+    /*
+     * obtiene el valor de la presion base de la zona.
+     * @param ninguno
+     * @return int: el valor de la presion base.
+     */
     public int getPresionBase(){ return presionBase; }
 
-    /**
-     * presion efectiva: 0 si mejora de tanque, si no ceil(presionBase + 6d)
+    /*
+     * calcula la penalizacion de oxigeno por presion, que se anula si el jugador tiene la mejora de tanque.
+     * @param j: jugador - el jugador, para verificar sus mejoras.
+     * @param z: int - la profundidad actual.
+     * @return int: el costo de oxigeno adicional por la presion.
      */
     @Override
     protected int presion(Jugador j, int z){
@@ -25,13 +41,18 @@ public class ZonaProfunda extends Zona {
         return (int)Math.ceil(presionBase + 6*d(z));
     }
 
-    /** no-op al entrar */
+    /*
+     * define la accion que ocurre al entrar en la zona (en este caso, ninguna).
+     * @param jugador: jugador - el jugador que entra a la zona.
+     * @return void
+     */
     @Override
     public void entrar(Jugador jugador){}
 
-    /**
-     * explora y entrega un metal con n(d) 2..6
-     * @param j jugador
+    /*
+     * ejecuta la accion de explorar, entregando al jugador un recurso metalico aleatorio.
+     * @param j: jugador - el jugador que realiza la exploracion.
+     * @return void
      */
     @Override
     public void explorar(Jugador j){
@@ -47,10 +68,11 @@ public class ZonaProfunda extends Zona {
         System.out.println("[profunda] obtienes " + drop + " x" + cant);
     }
 
-    /**
-     * recolecta metales con n(d) 2..6
-     * @param j jugador
-     * @param tipo tipo de recurso
+    /*
+     * permite al jugador recolectar un tipo de metal especifico de la zona.
+     * @param j: jugador - el jugador que recolecta.
+     * @param tipo: itemtipo - el recurso que se intenta recolectar.
+     * @return void
      */
     @Override
     public void recolectaTipoRecurso(Jugador j, ItemTipo tipo){

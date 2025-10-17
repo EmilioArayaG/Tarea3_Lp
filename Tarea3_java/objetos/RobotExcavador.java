@@ -17,37 +17,55 @@ public class RobotExcavador {
 
     private final EnumMap<ItemTipo,Integer> carga = new EnumMap<>(ItemTipo.class);
 
-    /** @return capacidad maxima de carga */
+    /*
+     * devuelve la capacidad maxima de carga del robot.
+     * @param ninguno
+     * @return int: la capacidad maxima.
+     */
     public int capacidadCarga(){ return capacidad; }
 
-    /**
-     * fija capacidad de carga
-     * @param nueva nueva capacidad
+    /*
+     * establece una nueva capacidad de carga para el robot.
+     * @param nueva: int - el nuevo valor de la capacidad.
+     * @return void
      */
     public void setCapacidadCarga(int nueva){
         if (nueva < 1) return;
         capacidad = nueva;
     }
 
-    /** @return peso actual sumando todas las entradas */
+    /*
+     * calcula el peso total de todos los recursos que el robot lleva actualmente.
+     * @param ninguno
+     * @return int: la suma de las cantidades de todos los items.
+     */
     public int pesoActual(){
         int s = 0;
         for (int v : carga.values()) s += v;
         return s;
     }
 
-    /** @return mapa copia de la carga por tipo */
+    /*
+     * devuelve una copia del inventario de carga del robot.
+     * @param ninguno
+     * @return map<itemtipo,integer>: un mapa con la carga actual del robot.
+     */
     public Map<ItemTipo,Integer> verCarga(){
         return new EnumMap<>(carga);
     }
 
-    /** @return true si el robot esta danado */
+    /*
+     * indica si el robot se encuentra danado por sobrecarga.
+     * @param ninguno
+     * @return boolean: 'true' si el robot esta danado.
+     */
     public boolean danado(){ return danado; }
 
-    /**
-     * extrae lote segun la zona y la profundidad
-     * @param zona zona actual
-     * @param profundidad profundidad usada para n(d)
+    /*
+     * realiza una extraccion de recursos en la zona y profundidad indicadas.
+     * @param zona: zona - la zona donde se realiza la extraccion.
+     * @param profundidad: int - la profundidad actual para calcular la cantidad.
+     * @return void
      */
     public void extraerEn(Zona zona, int profundidad){
         if (danado){ System.out.println("[robot] danado, repara antes de extraer."); return; }
@@ -67,9 +85,10 @@ public class RobotExcavador {
         }
     }
 
-    /**
-     * descargar toda la carga al almacen de la nave
-     * @param nave nave exploradora
+    /*
+     * transfiere toda la carga del robot al almacen de la nave exploradora.
+     * @param nave: naveexploradora - la nave que recibira los recursos.
+     * @return void
      */
     public void descargarEnNave(NaveExploradora nave){
         if (carga.isEmpty()){
@@ -83,25 +102,30 @@ public class RobotExcavador {
         carga.clear();
     }
 
-    /**
-     * reparar sin consumir (tu main ya descuenta recursos del jugador)
+    /*
+     * repara el robot, permitiendole volver a extraer recursos.
+     * @param ninguno
+     * @return void
      */
     public void reparar(){
         danado = false;
         System.out.println("[robot] reparado");
     }
 
-    /**
-     * mejora capacidad +25% redondeando hacia arriba
+    /*
+     * aumenta la capacidad de carga del robot en un 25%.
+     * @param ninguno
+     * @return void
      */
     public void mejorarCapacidad(){
         capacidad = (int)Math.ceil(capacidad * 1.25);
         System.out.println("[robot] capacidad mejorada a " + capacidad);
     }
 
-
-    /**
-     * elige un tipo acorde a la zona
+    /*
+     * elige aleatoriamente un tipo de recurso valido para la zona actual.
+     * @param z: zona - la zona actual.
+     * @return itemtipo: el tipo de item a recolectar, o null si no corresponde.
      */
     private ItemTipo elegirTipoPorZona(Zona z){
         if (z instanceof ZonaArrecife){
@@ -118,10 +142,13 @@ public class RobotExcavador {
             return a[rng.nextInt(a.length)];
         }
         return null;
-        }
+    }
 
-    /**
-     * decide n(d) acorde a la zona usando sus rangos
+    /*
+     * calcula la cantidad de recursos a obtener segun la formula n(d) y los rangos de la zona.
+     * @param z: zona - la zona actual.
+     * @param profundidad: int - la profundidad para el calculo.
+     * @return int: la cantidad de recursos a obtener.
      */
     private int rangoPorZona(Zona z, int profundidad){
         if (z instanceof ZonaArrecife) return z.nProduccion(profundidad, 1, 3);

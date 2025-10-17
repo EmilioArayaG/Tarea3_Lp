@@ -5,18 +5,31 @@ public class Oxigeno {
     private int bonus = 0;
     private int actual = base;
 
-    /** @return capacidad total (base + bonus) */
+    /*
+     * calcula la capacidad maxima de oxigeno, sumando la base y las mejoras.
+     * @param ninguno
+     * @return int: la capacidad total de oxigeno.
+     */
     public int capacidadTotal(){ return base + bonus; }
 
-    /** @return oxigeno restante */
+    /*
+     * devuelve la cantidad de oxigeno que le queda al jugador actualmente.
+     * @param ninguno
+     * @return int: las unidades de oxigeno restantes.
+     */
     public int restante(){ return actual; }
 
-    /** recarga al maximo */
+    /*
+     * rellena el tanque de oxigeno del jugador a su maxima capacidad.
+     * @param ninguno
+     * @return void
+     */
     public void recargarCompleto(){ actual = capacidadTotal(); }
 
-    /**
-     * consume oxigeno sin bajar de 0
-     * @param c unidades a consumir
+    /*
+     * reduce el oxigeno del jugador en una cantidad determinada, sin bajar de cero.
+     * @param c: int - las unidades de oxigeno a consumir.
+     * @return void
      */
     public void consumirO2(int c){
         if (c < 0) return;
@@ -24,13 +37,21 @@ public class Oxigeno {
         if (actual < 0) actual = 0;
     }
 
-    /** duplica la capacidad base (mejora de tanque) */
+    /*
+     * aplica la mejora de tanque, duplicando la capacidad base de oxigeno.
+     * @param ninguno
+     * @return void
+     */
     public void duplicarCapacidadBase(){
         base *= 2;
         if (actual > capacidadTotal()) actual = capacidadTotal();
     }
 
-    /** suma +30 a la capacidad (mejora incremental) */
+    /*
+     * anade un bonus de 30 unidades a la capacidad maxima de oxigeno.
+     * @param ninguno
+     * @return void
+     */
     public void mejorarOxigenoMas30(){
         bonus += 30;
         if (actual > capacidadTotal()) actual = capacidadTotal();
