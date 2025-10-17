@@ -6,87 +6,132 @@ import entorno.ZonaArrecife;
 import entorno.ZonaProfunda;
 import entorno.ZonaVolcanica;
 import java.util.EnumMap;
+import java.util.Map;
 import java.util.Random;
 
 public class RobotExcavador {
-    private static final Random RNG = new Random();
+    private final Random rng = new Random();
 
-    private int capacidadCarga = 1000;
+    private int capacidad = 1000;
     private boolean danado = false;
+
     private final EnumMap<ItemTipo,Integer> carga = new EnumMap<>(ItemTipo.class);
 
-    public int capacidadCarga(){ return capacidadCarga; }
-    public boolean danado(){ return danado; }
-    public EnumMap<ItemTipo,Integer> verCarga(){ return new EnumMap<>(carga); }
-    public int pesoActual(){ return carga.values().stream().mapToInt(Integer::intValue).sum(); }
+    /** @return capacidad maxima de carga */
+    public int capacidadCarga(){ return capacidad; }
 
+    /**
+     * fija capacidad de carga
+     * @param nueva nueva capacidad
+     */
     public void setCapacidadCarga(int nueva){
-        if (nueva > 0) capacidadCarga = nueva;
+        if (nueva < 1) return;
+        capacidad = nueva;
     }
 
-    public void extraerEn(Zona zona, int z){
-        if (zona instanceof NaveEstrellada){
-            System.out.println("[Robot] No opera dentro de la Nave Estrellada.");
-            return;
-        }
-        if (danado){
-            System.out.println("[Robot] Esta danado. Repara antes de operar.");
-            return;
-        }
+    /** @return peso actual sumando todas las entradas */
+    public int pesoActual(){
+        int s = 0;
+        for (int v : carga.values()) s += v;
+        return s;
+    }
 
-        ItemTipo[] pool;
-        if (zona instanceof ZonaArrecife){
-            pool = new ItemTipo[]{ ItemTipo.CUARZO, ItemTipo.SILICIO, ItemTipo.COBRE };
-        } else if (zona instanceof ZonaProfunda){
-            pool = new ItemTipo[]{ ItemTipo.PLATA, ItemTipo.ORO, ItemTipo.ACERO, ItemTipo.DIAMANTE, ItemTipo.MAGNETITA };
-        } else if (zona instanceof ZonaVolcanica){
-            pool = new ItemTipo[]{ ItemTipo.TITANIO, ItemTipo.SULFURO, ItemTipo.URANIO };
-        } else {
-            pool = new ItemTipo[]{};
-        }
+    /** @return mapa copia de la carga por tipo */
+    public Map<ItemTipo,Integer> verCarga(){
+        return new EnumMap<>(carga);
+    }
 
-        int base = zona.nProduccion(z, 2, 5);
-        int multiplicador = 3 + RNG.nextInt(4);
-        int cantidad = Math.max(1, base * multiplicador);
+    /** @return true si el robot esta danado */
+    public boolean danado(){ return danado; }
 
-        ItemTipo drop = pool.length == 0 ? null : pool[RNG.nextInt(pool.length)];
-        if (drop == null) {
-            System.out.println("[Robot] No hay recursos validos en esta zona.");
-            return;
-        }
+    /**
+     * extrae lote segun la zona y la profundidad
+     * @param zona zona actual
+     * @param profundidad profundidad usada para n(d)
+     */
+    public void extraerEn(Zona zona, int profundidad){
+        if (danado){ System.out.println("[robot] danado, repara antes de extraer."); return; }
 
-        int nuevoPeso = pesoActual() + cantidad;
-        if (nuevoPeso > capacidadCarga){
+        ItemTipo tipo = elegirTipoPorZona(zona);
+        int n = rangoPorZona(zona, profundidad);
+
+        int nuevoPeso = pesoActual() + n;
+        if (nuevoPeso > capacidad){
             danado = true;
-            int espacio = Math.max(0, capacidadCarga - pesoActual());
-            if (espacio > 0){
-                carga.merge(drop, espacio, Integer::sum);
-                System.out.println("[Robot] Sobrecarga. Se dano y solo almaceno " + espacio + " de " + cantidad + " " + drop + ".");
-            } else {
-                System.out.println("[Robot] Sobrecarga. Se dano sin poder almacenar mas material.");
-            }
-        } else {
-            carga.merge(drop, cantidad, Integer::sum);
-            System.out.println("[Robot] Extrajo " + drop + " x" + cantidad + " (carga: " + pesoActual() + "/" + capacidadCarga + ").");
+            System.out.println("[robot] sobrecarga, queda danado (carga=" + nuevoPeso + "/" + capacidad + ")");
+        }
+
+        if (tipo != null){
+            carga.merge(tipo, n, Integer::sum);
+            System.out.println("[robot] extrae " + tipo + " x" + n + " (carga=" + pesoActual() + "/" + capacidad + ")");
         }
     }
 
+    /**
+     * descargar toda la carga al almacen de la nave
+     * @param nave nave exploradora
+     */
     public void descargarEnNave(NaveExploradora nave){
         if (carga.isEmpty()){
-            System.out.println("[Robot] No hay carga que descargar.");
+            System.out.println("[robot] sin carga.");
             return;
         }
         for (var e : carga.entrySet()){
             nave.depositar(e.getKey(), e.getValue());
         }
+        System.out.println("[robot] descarga completa en almacen de la nave");
         carga.clear();
-        System.out.println("[Robot] Descarga completa en almacen de la nave.");
     }
 
+    /**
+     * reparar sin consumir (tu main ya descuenta recursos del jugador)
+     */
     public void reparar(){
         danado = false;
-        System.out.println("[Robot] Reparado.");
+        System.out.println("[robot] reparado");
+    }
+
+    /**
+     * mejora capacidad +25% redondeando hacia arriba
+     */
+    public void mejorarCapacidad(){
+        capacidad = (int)Math.ceil(capacidad * 1.25);
+        System.out.println("[robot] capacidad mejorada a " + capacidad);
+    }
+
+
+    /**
+     * elige un tipo acorde a la zona
+     */
+    private ItemTipo elegirTipoPorZona(Zona z){
+        if (z instanceof ZonaArrecife){
+            ItemTipo[] a = { ItemTipo.CUARZO, ItemTipo.SILICIO, ItemTipo.COBRE };
+            return a[rng.nextInt(a.length)];
+        } else if (z instanceof ZonaProfunda){
+            ItemTipo[] a = { ItemTipo.PLATA, ItemTipo.ORO, ItemTipo.ACERO, ItemTipo.DIAMANTE, ItemTipo.MAGNETITA };
+            return a[rng.nextInt(a.length)];
+        } else if (z instanceof ZonaVolcanica){
+            ItemTipo[] a = { ItemTipo.TITANIO, ItemTipo.SULFURO, ItemTipo.URANIO };
+            return a[rng.nextInt(a.length)];
+        } else if (z instanceof NaveEstrellada){
+            ItemTipo[] a = { ItemTipo.CABLES, ItemTipo.PIEZAS_METAL };
+            return a[rng.nextInt(a.length)];
+        }
+        return null;
+        }
+
+    /**
+     * decide n(d) acorde a la zona usando sus rangos
+     */
+    private int rangoPorZona(Zona z, int profundidad){
+        if (z instanceof ZonaArrecife) return z.nProduccion(profundidad, 1, 3);
+        if (z instanceof ZonaProfunda)  return z.nProduccion(profundidad, 2, 6);
+        if (z instanceof ZonaVolcanica) return z.nProduccion(profundidad, 3, 8);
+        if (z instanceof NaveEstrellada) return 1 + rng.nextInt(2);
+        return 1;
     }
 }
+
+
 
 

@@ -1,23 +1,21 @@
-JAVAC=javac
-JAVA=java
-SRC=$(shell find . -name "*.java")
-BIN=.
+JAVAC = javac
+JAVA  = java
 
-.PHONY: all compile run clean pack
+SOURCES := $(shell find . -name "*.java")
 
-all: compile
+.PHONY: all build run clean zip
 
-compile:
-	$(JAVAC) -Xlint:all -d $(BIN) $(SRC)
+all: build
 
-run: compile
+build:
+	$(JAVAC) -Xlint:all $(SOURCES)
+
+run: build
 	$(JAVA) Main
 
 clean:
 	find . -name "*.class" -delete
 
-pack:
-	tar -czf Tarea3LP_TU_NOMBRE_TU_RUT.tar.gz \
-		Main.java README.md Makefile \
+zip:
+	tar -czf Tarea3LP_Entregable.tar.gz Main.java Makefile \
 		player/*.java objetos/*.java entorno/*.java
-

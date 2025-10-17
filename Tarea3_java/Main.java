@@ -13,6 +13,10 @@ import objetos.RobotExcavador;
 import player.Jugador;
 
 public class Main {
+    /**
+     * punto de entrada del programa
+     * @param args argumentos de linea de comandos
+     */
     public static void main(String[] args) {
         System.out.println("=== Exploracion Subacuatica ===");
 
@@ -378,6 +382,12 @@ public class Main {
         System.out.println("Fin del juego.");
     }
 
+    /**
+     * permite al jugador seleccionar el recurso valido segun la zona
+     * @param sc scanner para leer entrada
+     * @param z zona actual
+     * @return itemtipo elegido o null si invalido
+     */
     private static ItemTipo seleccionarRecurso(Scanner sc, Zona z){
         if (z instanceof ZonaArrecife) {
             System.out.println("Elige recurso: 1) CUARZO  2) SILICIO  3) COBRE");
@@ -416,6 +426,7 @@ public class Main {
         return null;
     }
 }
+
 
 
 
