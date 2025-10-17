@@ -41,7 +41,7 @@ Tambien como fue antes mencionado no mover nada a una carpeta o desde una carpet
 - mover la nave entre zonas no consume o2.
 - al salir al agua, el jugador aparece exactamente en el anclaje definido para esa zona.
 - almacen de la nave:
-  - ver inventario de la nave
+  - se puede ver inventario de la nave
   - depositar todo el inventario del jugador
   - retirar por tipo y cantidad desde la nave al jugador
 - si el o2 del jugador llega a 0 en el agua:
